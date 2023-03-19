@@ -14,11 +14,19 @@ function App() {
     setLoading(true);
     setDownloadLink(null);
     // Call your back-end API to trigger the processing
-     const response = await fetch("http://localhost:5000/generate_ppt", { method: "POST", body: JSON.stringify({ user_input: userInput }) });
+    
+    const response = await fetch("http://localhost:5000/generate_ppt", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ user_input: userInput }),
+});
+
      const result = await response.json();
      if (result.success) {
-       setDownloadLink("http://localhost:5000/download_ppt?pptx_path=" + result.pptx_path); // Set the download link to the endpoint serving the generated PowerPoint file
-     }
+  setDownloadLink("http://localhost:5000/download_ppt?pptx_filename=" + result.pptx_filename);
+}
     setLoading(false);
   };
 
