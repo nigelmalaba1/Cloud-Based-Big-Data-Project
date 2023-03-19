@@ -35,16 +35,18 @@ def generate_ppt():
         status = response.json()["state"]["life_cycle_state"]
 
     if status == "TERMINATED":
-        # Return the downloaded PowerPoint file path
-        pptx_path = response.json()["state"]["result_state"]
-        return jsonify({"success": True, "pptx_path": pptx_path})
-    else:
-        return jsonify({"success": False})
+    # Return the downloaded PowerPoint file path
+    pptx_path = response.json()["state"]["result_state"]
+    pptx_filename = os.path.basename(pptx_path)
+    return jsonify({"success": True, "pptx_filename": pptx_filename})
+else:
+    return jsonify({"success": False})
 
 
 @app.route("/download_ppt")
 def download_ppt():
-    pptx_path = request.args.get("pptx_path")
+    pptx_filename = request.args.get("pptx_filename")
+    pptx_path = os.path.join("/dbfs", pptx_filename)
     return send_from_directory("/dbfs", pptx_path, as_attachment=True, attachment_filename="generated_presentation.pptx")
 
 
